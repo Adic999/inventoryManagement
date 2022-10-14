@@ -22,6 +22,7 @@ export async function getMenuItems(token) {
     });
     return response.data;
   } catch (error) {
+    console.log(error);
     return error.response.data;
   }
 }

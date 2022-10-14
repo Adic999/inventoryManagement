@@ -115,7 +115,6 @@ const Lunch = () => {
 
               renderLunchPage()
 
-              console.log("y")
               // filter function to filter user query 
               handleFilter()
             }
@@ -129,7 +128,6 @@ const Lunch = () => {
         if(menuItems.length === 0 || check(menuItems, lunchItems) === false || check(pendingOrdersFuncVar, pendingOrders) === false){
           dispatch(setMenuItems(lunchItems))
           dispatch(setPendingOrder(pendingOrdersFuncVar))
-          console.log("rerender")
         }
       } catch (error) {
         console.log(error)

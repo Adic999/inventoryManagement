@@ -41,9 +41,10 @@ export async function getMenuItems(req, res) {
     if (items.length > 0) {
       res.status(200).json(items);
     } else {
-      res.status(400).json("NO ITEM FOUND");
+      res.status(200).json("NO ITEM FOUND");
     }
   } catch (error) {
+    console.log(error);
     res.status(400).json("NO ITEM FOUND");
   }
 }
@@ -60,6 +61,7 @@ export async function createPendingOrdersFunction(req, res) {
       res.status(200).json(createPendingOrder);
     }
   } catch (error) {
+    console.log(error);
     res.status(400).json("SOMETHING WENT WRONG WHILE CREATING PENDING ORDERS");
   }
 }
@@ -72,6 +74,7 @@ export async function getPendingOrdersFunction(req, res) {
     });
     res.status(200).json(pendingOrders);
   } catch (error) {
+    console.log(error);
     res.status(400).json("SOMETHING WENT WRONG WHILE GETTING PENDING ORDERS");
   }
 }
@@ -94,6 +97,7 @@ export async function deletePendingOrderFunction(req, res) {
       }
     }
   } catch (error) {
+    console.log(error);
     res.status(400).json("SOMETHING WENT WRONG WHILE DELETING PENDING ORDERS");
   }
 }
@@ -139,6 +143,7 @@ export async function completePendingOrder(req, res) {
       }
     }
   } catch (error) {
+    console.log(error);
     res.status(400).json("SOMETHING WENT WRONG WHILE COMPLETING ORDER");
   }
 }
