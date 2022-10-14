@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import connectToDatabase from "./configfile/config.js";
-import route from "./routes/userRoutes.js";
-import shopRoute from "./routes/shopRoutes.js";
-import dailySaleRoute from "./routes/dailySaleRoutes.js";
+import connectToDatabase from "../configfile/config.js";
+import route from "./userRoutes.js";
+import shopRoute from "./shopRoutes.js";
+import dailySaleRoute from "./dailySaleRoutes.js";
 
 const server = express();
 server.use(express.json());
