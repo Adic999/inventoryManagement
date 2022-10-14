@@ -6,11 +6,10 @@ import { changePageStatus } from '../store/pageSlice'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import TakeOrderItemRender from '../components/TakeOrderItemRender'
 import { getMenuItems, getPendingOrders } from '../functions/dailySaleFunction'
-import {setLunchReRender } from '../store/takeOrder'
+import { check } from '../functions/compareArrays'
 import { setPendingOrder,setMenuItems} from '../store/takeOrder'
 
 const Container = styled.div`
-  border: 1px solid red;
   height: 80vh;
   display: flex;
   justify-content: center;
@@ -43,7 +42,6 @@ const PendingOrder = styled.div`
   font-size: 20px;
   font-weight: bold;
   background-color: orange;
-
 `
 const PendingNotification = styled.div`
   height: 60%;
@@ -89,6 +87,7 @@ const DisplayContainer = styled.div`
   row-gap: 1%;
 `
 const Lunch = () => {
+  
   // states responsible to verify the user is logged in
     const navigate = useNavigate()
     const loggedIn = useSelector((state)=>state.userState.loggedIn)
@@ -116,18 +115,25 @@ const Lunch = () => {
 
               renderLunchPage()
 
+              console.log("y")
               // filter function to filter user query 
               handleFilter()
             }
-    },[loggedIn, dispatch, token, navigate,inputVal, lunchReRender])
+    },[loggedIn, dispatch, token, navigate,inputVal, lunchReRender, menuItems, pendingOrders])
 
 
     const renderLunchPage = async ()=>{
-      const lunchItems = await getMenuItems(token)
-      const pendingOrders = await getPendingOrders(token)
-      dispatch(setMenuItems(lunchItems))
-      dispatch(setPendingOrder(pendingOrders))
-      dispatch(setLunchReRender(true))
+      try {
+        const lunchItems = await getMenuItems(token)
+        const pendingOrdersFuncVar = await getPendingOrders(token)
+        if(menuItems.length === 0 || check(menuItems, lunchItems) === false || check(pendingOrdersFuncVar, pendingOrders) === false){
+          dispatch(setMenuItems(lunchItems))
+          dispatch(setPendingOrder(pendingOrdersFuncVar))
+          console.log("rerender")
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
 
  
@@ -152,6 +158,7 @@ const Lunch = () => {
 
     
   return (
+    <>
     <Container>
       <Wrapper>
         <FilterContainer>
@@ -174,6 +181,7 @@ const Lunch = () => {
         </DisplayContainer>
       </Wrapper>
     </Container>
+    </>
   )
 }
 

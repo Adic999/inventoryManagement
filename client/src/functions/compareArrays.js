@@ -12,8 +12,24 @@ export function check(array1, array2) {
       } else {
         for (let j = 0; length1 > j; j++) {
           if (Object.values(array1[i])[j] !== Object.values(array2[i])[j]) {
-            console.log("false");
-            return false;
+            if (typeof Object.values(array1[i])[j] === "object") {
+              const length01 = Object.values(array1[i])[j].length;
+              const length02 = Object.values(array2[i])[j].length;
+              if (length01 !== length02) {
+                console.log("false");
+                return false;
+              } else {
+                for (let k = 0; length01 > k; k++) {
+                  if (
+                    Object.values(array1[i])[j][k] !==
+                    Object.values(array2[i])[j][k]
+                  ) {
+                    console.log("false");
+                    return false;
+                  }
+                }
+              }
+            }
           }
         }
       }

@@ -1,10 +1,10 @@
-import React,{useState, useEffect} from 'react'
+import React,{useState} from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
-import {setDinnerReRender, turnOffTakeOrder, turnOnTakeOrder} from "../store/takeOrder"
+import {setLunchReRender, setDinnerReRender , turnOffTakeOrder, turnOnTakeOrder} from "../store/takeOrder"
 import { setTargetId } from '../store/takeOrder'
 import { createPendingOrders } from '../functions/dailySaleFunction'
-import { setLunchReRender } from '../store/takeOrder'
+import { sendAlert } from '../store/alert'
 
 const RowContainer = styled.div`
   display: grid;
@@ -150,8 +150,7 @@ const TakeOrderItemRender = ({id,price,itemName,curryAmount,curryOptions,drinkOp
     const [drink, setDrink] = useState("")
     const lunchReRender = useSelector(state=> state.takeOrder.lunchReRender)
     const dinnerReRender = useSelector(state=> state.takeOrder.dinnerReRender)
-
-    
+    const page = useSelector(state=> state.pageState.pageStatus)
 
 
     // order amount counter
@@ -206,9 +205,7 @@ const TakeOrderItemRender = ({id,price,itemName,curryAmount,curryOptions,drinkOp
      }
     }
 
-
-
-    const handleConfirm = async (e)=>{
+    const handleConfirm = async ()=>{
       try {
         if(complementary){
           const data = {
@@ -223,9 +220,16 @@ const TakeOrderItemRender = ({id,price,itemName,curryAmount,curryOptions,drinkOp
             complementary,
           }
           if(Object.keys(data).length=== 9){
-            const response = await createPendingOrders(token, data)
+            await createPendingOrders(token, data)
+            if(page === "lunch"){
             dispatch(setLunchReRender(lunchReRender ? false: true))
+          }else if(page === "dinner"){
             dispatch(setDinnerReRender( dinnerReRender? false: true))
+          }
+            dispatch(sendAlert("orderAdded"))
+            setTimeout(() => {
+              dispatch(sendAlert("off"))
+            }, 1000);
           }
       }
         else{
@@ -242,11 +246,18 @@ const TakeOrderItemRender = ({id,price,itemName,curryAmount,curryOptions,drinkOp
             complementary,
           }
           if(Object.keys(data).length=== 9){
-            const response = await createPendingOrders(token, data)
-            dispatch(setLunchReRender(lunchReRender ? false: true))
+            await createPendingOrders(token, data)
+            if(page === "lunch"){
+              dispatch(setLunchReRender(lunchReRender ? false: true))
+            }else if(page === "dinner"){
+              dispatch(setDinnerReRender( dinnerReRender? false: true))
+            }
+            dispatch(sendAlert("orderAdded"))
+            setTimeout(() => {
+              dispatch(sendAlert("off"))
+            }, 1000);
           }
         }
-
       } catch (error) {
         console.log(error)
         

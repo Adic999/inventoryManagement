@@ -5,6 +5,7 @@ import userSlice from "./userSlice";
 import tokenSlice from "./tokenSlice";
 import fncButtonsSlice from "./fncButtons";
 import tempData from "./tempData";
+import alert from "./alert";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { combineReducers } from "@reduxjs/toolkit";
@@ -26,6 +27,7 @@ const reducer = combineReducers({
   tempData: tempData,
   itemDetail: itemSlice,
   takeOrder: takeOrderSlice,
+  alert,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

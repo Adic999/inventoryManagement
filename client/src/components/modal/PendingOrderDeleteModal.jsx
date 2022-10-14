@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import {useDispatch, useSelector } from 'react-redux'
 import { deletePendingOrder } from '../../functions/dailySaleFunction'
 import { setPendingOrderReRender } from '../../store/takeOrder'
+import {sendAlert} from "../../store/alert"
 
 const Container = styled.div`
     background-color: hsla(0, 0%, 98.0392156862745%, 1);
@@ -58,6 +59,10 @@ const PendingOrderDeleteModal = ({setDeleteOpen,id }) => {
     await deletePendingOrder(token, id)
     dispatch(setPendingOrderReRender(pendingOrderReRender ? false:true))
     setDeleteOpen(false)
+    dispatch(sendAlert("orderDeleted"))
+            setTimeout(() => {
+              dispatch(sendAlert("off"))
+            }, 1000);
   }
   
   const handleCancel = ()=>{

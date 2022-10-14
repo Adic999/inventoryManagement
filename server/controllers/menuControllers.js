@@ -3,6 +3,7 @@ import pendingOrdersModel from "../models/createPendingOrders.js";
 import completePendingOrderModel from "../models/completePendingOrder.js";
 
 import mongoose from "mongoose";
+
 // create menu items
 export async function createMenuItemsFunction(req, res) {
   try {
@@ -11,6 +12,7 @@ export async function createMenuItemsFunction(req, res) {
         $and: [
           { name: { $eq: req.body.name } },
           { user: { $eq: req.user.id } },
+          { category: { $eq: req.body.category } },
         ],
       });
       if (checkItem.length > 0) {
@@ -25,6 +27,7 @@ export async function createMenuItemsFunction(req, res) {
       }
     }
   } catch (error) {
+    console.log(error);
     res.status(400).json("ERROR OCCURED WHILE CREATING MENU ITEM");
   }
 }

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import {useDispatch, useSelector } from 'react-redux'
 import { completePendingOrder } from '../../functions/dailySaleFunction'
 import { setPendingOrderReRender } from '../../store/takeOrder'
-
+import {sendAlert} from "../../store/alert"
 const Container = styled.div`
     background-color: hsla(0, 0%, 98.0392156862745%, 1);
     border: 1px solid black;
@@ -59,6 +59,10 @@ const PendingOrderCompleteModal = ({setCompleteOpen, id, }) => {
     try {
       await completePendingOrder(token,id)
       dispatch(setPendingOrderReRender(pendingOrderReRender ? false:true))
+      dispatch(sendAlert("orderCompleted"))
+            setTimeout(() => {
+              dispatch(sendAlert("off"))
+            }, 1000);
       setCompleteOpen(false)
     } catch (error) {
       setCompleteOpen(false)

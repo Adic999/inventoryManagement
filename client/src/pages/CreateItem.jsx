@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import { changePageStatus } from '../store/pageSlice'
 import { createMenuItem } from '../functions/dailySaleFunction'
+import {sendAlert} from "../store/alert"
 
 const Container = styled.div`
     height: 90vh;
@@ -230,7 +231,11 @@ const CreateItem = () => {
       ))
       if(filteredObject.price && filteredObject.name && filteredObject.category){
       const createItem = await createMenuItem(token, filteredObject)
-       console.log(createItem)
+      console.log(createItem)
+      dispatch(sendAlert("itemCreated"))
+      setTimeout(() => {
+        dispatch(sendAlert("off"))
+      }, 1000);
       }else{
         console.log("please fill required form")
       }

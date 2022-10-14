@@ -6,11 +6,9 @@ import { changePageStatus } from '../store/pageSlice'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import TakeOrderItemRender from '../components/TakeOrderItemRender'
 import { getMenuItems, getPendingOrders } from '../functions/dailySaleFunction'
-import {setDinnerReRender } from '../store/takeOrder'
 import { setPendingOrder,setMenuItems} from '../store/takeOrder'
-
+import { check } from '../functions/compareArrays'
 const Container = styled.div`
-  border: 1px solid red;
   height: 80vh;
   display: flex;
   justify-content: center;
@@ -43,7 +41,6 @@ const PendingOrder = styled.div`
   font-size: 20px;
   font-weight: bold;
   background-color: orange;
-
 `
 const PendingNotification = styled.div`
   height: 60%;
@@ -89,6 +86,7 @@ const DisplayContainer = styled.div`
   row-gap: 1%;
 `
 const Dinner = () => {
+  
   // states responsible to verify the user is logged in
     const navigate = useNavigate()
     const loggedIn = useSelector((state)=>state.userState.loggedIn)
@@ -113,20 +111,27 @@ const Dinner = () => {
 
               // change page status to dinner to change the title bar to dinner
               dispatch(changePageStatus("dinner"))
+
               renderDinnerPage()
 
+              console.log("y")
               // filter function to filter user query 
               handleFilter()
             }
-    },[loggedIn, dispatch, token, navigate,inputVal, dinnerReRender])
-
+    },[loggedIn, dispatch, token, navigate,inputVal, menuItems, pendingOrders, dinnerReRender])
 
     const renderDinnerPage = async ()=>{
-      const dinnerItems = await getMenuItems(token)
-      const pendingOrders = await getPendingOrders(token)
-      dispatch(setMenuItems(dinnerItems))
-      dispatch(setPendingOrder(pendingOrders))
-      dispatch(setDinnerReRender(true))
+      try {
+        const dinnerItems = await getMenuItems(token)
+        const pendingOrdersFuncVar = await getPendingOrders(token)
+        if(menuItems.length === 0 || check(menuItems, dinnerItems) === false || check(pendingOrdersFuncVar, pendingOrders) === false){
+          dispatch(setMenuItems(dinnerItems))
+          dispatch(setPendingOrder(pendingOrdersFuncVar))
+          console.log("rerender")
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
 
  
@@ -151,6 +156,7 @@ const Dinner = () => {
 
     
   return (
+    <>
     <Container>
       <Wrapper>
         <FilterContainer>
@@ -173,6 +179,7 @@ const Dinner = () => {
         </DisplayContainer>
       </Wrapper>
     </Container>
+    </>
   )
 }
 

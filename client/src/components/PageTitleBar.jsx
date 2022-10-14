@@ -74,12 +74,20 @@ const PageTitleBar = () => {
   }
 
   const handleBackButton= ()=>{
+   if(pageTitle === "SHOP"||pageTitle=== "DAILY SALE"){
+    navigate("/")
+   }else if(pageTitle === "TAKE ORDER" || pageTitle === "SALE" || pageTitle === "CREATE ITEM"){
+    navigate("/dailySale")
+   }else if(pageTitle === "LUNCH" || pageTitle === "DINNER"){
+    navigate("/takeOrder")
+   }else if(pageTitle === "ORDERS"){
     navigate(-1)
+   }
   }
   return (
     <Container>
       <Wrapper>
-      {pageTitle === "SHOP" || pageTitle=== "DAILY SALE" ? <Button onClick={handleBackButton}><ArrowBackOutlinedIcon style={{cursor:"pointer"}}/></Button> : pageTitle === "TAKE ORDER" || pageTitle === "SALE" || pageTitle === "CREATE ITEM" ? <Button onClick={handleBackButton}><ArrowBackOutlinedIcon style={{cursor:"pointer"}}/></Button>:pageTitle === "LUNCH" || pageTitle === "DINNER" ? <Button onClick={handleBackButton}><ArrowBackOutlinedIcon style={{cursor:"pointer"}}/></Button>:pageTitle === "ORDERS" ? <Button onClick={handleBackButton}><ArrowBackOutlinedIcon style={{cursor:"pointer"}}/></Button>:null}
+      {pageTitle !== "DASHBOARD"?<Button onClick={handleBackButton}><ArrowBackOutlinedIcon style={{cursor:"pointer"}}/></Button>:null}
         <Title>
           {pageTitle}
         </Title>

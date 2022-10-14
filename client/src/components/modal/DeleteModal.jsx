@@ -60,7 +60,6 @@ const DeleteModal = ({userItems,setUserItems}) => {
         ])
       dispatch(turnOff("delete"))
     }else{
-      console.log(deleted)
       dispatch(turnOff("delete"))
     }
     }

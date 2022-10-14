@@ -5,6 +5,7 @@ import PendingOrderDeleteModal from "./modal/PendingOrderDeleteModal"
 import {updatePendingOrder} from '../functions/dailySaleFunction'
 import {useDispatch, useSelector } from 'react-redux'
 import { setPendingOrderReRender } from '../store/takeOrder'
+import { sendAlert } from '../store/alert'
 
 const ItemContainer = styled.div`
   display: grid;
@@ -148,6 +149,10 @@ const RenderPendingOrders = ({name,price,id, setPendingupdated,curry1, curry2, a
       } 
       await updatePendingOrder(token, data,id)
       dispatch(setPendingOrderReRender(pendingOrderReRender ? false:true))
+      dispatch(sendAlert("orderEdited"))
+            setTimeout(() => {
+              dispatch(sendAlert("off"))
+            }, 1000);
     }else{
       setEdit(true)
     }
