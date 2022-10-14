@@ -3,10 +3,13 @@ import axios from "axios";
 // login user
 export async function loginUser(email, password) {
   try {
-    const response = await axios.post("http://localhost:3001/api/user/login", {
-      email,
-      password,
-    });
+    const response = await axios.post(
+      "https://inventory-management-api-001.onrender.com/api/user/login",
+      {
+        email,
+        password,
+      }
+    );
     if (response.data) {
       return response.data;
     } else {
@@ -20,7 +23,7 @@ export async function loginUser(email, password) {
 export async function registerUser(userdata) {
   try {
     const response = await axios.post(
-      "http://localhost:3001/api/user/register",
+      "https://inventory-management-api-001.onrender.com/api/user/register",
       userdata
     );
     if (response.data) {
