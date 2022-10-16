@@ -4,6 +4,7 @@ import { turnOff } from '../../store/fncButtons'
 import { useDispatch, useSelector } from 'react-redux'
 import { resetTempData } from '../../store/tempData'
 import {deleteShopItem} from "../../functions/shopFunction"
+import {sendAlert} from "../../store/alert"
 
 const Container = styled.div`
     height: 100%;
@@ -58,6 +59,10 @@ const DeleteModal = ({userItems,setUserItems}) => {
           ...userItems,
           "deleted"
         ])
+        dispatch(sendAlert("itemDeleted"))
+        setTimeout(() => {
+          dispatch(sendAlert("off"))
+        }, 1000);
       dispatch(turnOff("delete"))
     }else{
       dispatch(turnOff("delete"))

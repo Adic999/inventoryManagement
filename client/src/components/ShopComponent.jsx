@@ -109,7 +109,7 @@ const ShopComponent = () => {
     let items = await getShopItems(token.token)
     
     // if everything goes well
-   if(items !== "Not authorized"){
+   if(items !== "Not authorized" && items !== "NO ITEMS FOUND"){
       items = items.map(item=>{
       const splitedDate = item.createdAt.split("T")
       item.createdAt = splitedDate[0]

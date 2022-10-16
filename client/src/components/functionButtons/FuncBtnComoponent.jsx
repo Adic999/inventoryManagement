@@ -4,6 +4,7 @@ import { turnOff } from '../../store/fncButtons'
 import {useDispatch, useSelector} from "react-redux"
 import { resetTempData } from '../../store/tempData'
 import { updateShopItem, soldShopItem } from '../../functions/shopFunction'
+import {sendAlert} from "../../store/alert"
 
 const Container = styled.div`
     
@@ -41,11 +42,14 @@ const FuncBtnComoponent = ({button,list, token, userItems, setUserItems}) => {
           console.log("AMOUNT CANNOT BE EMPTY")
         }else{
           const sellItem = await soldShopItem(token,list,id)
-          console.log(sellItem)
           setUserItems([
             ...userItems,
-            "sellItem"
+            sellItem
           ])
+          dispatch(sendAlert("itemSold"))
+          setTimeout(() => {
+            dispatch(sendAlert("off"))
+          }, 1000);
           dispatch(turnOff(e.target.name))
           dispatch(resetTempData())
         }
@@ -64,6 +68,10 @@ const FuncBtnComoponent = ({button,list, token, userItems, setUserItems}) => {
             ...userItems,
             updateItem
           ])
+          dispatch(sendAlert("itemUpdated"))
+          setTimeout(() => {
+            dispatch(sendAlert("off"))
+          }, 1000);
         }else{
           console.log("CANNOT UPDATE EMPTY ARGUMENTS")
         }

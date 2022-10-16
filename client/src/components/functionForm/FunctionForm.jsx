@@ -1,10 +1,11 @@
 import React,{useState} from 'react'
 import styled from "styled-components";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import DeleteModal from "../modal/DeleteModal"
 import FuncBtnComoponent from '../functionButtons/FuncBtnComoponent';
 import { createShopItem } from '../../functions/shopFunction';
 import { useEffect } from 'react';
+import {sendAlert} from "../../store/alert.js"
 
 const Form = styled.form`
   border: 1px solid black;
@@ -43,6 +44,7 @@ const FunctionForm = ({userItems,setUserItems}) => {
   const [placeHolder, setPlaceHolder] = useState({})
   const [soldInput, setSoldInput] = useState({})
 
+  const dispatch = useDispatch()
   useEffect(()=>{
     setSoldInput({...status})
     setPlaceHolder({...status})
@@ -88,11 +90,21 @@ const FunctionForm = ({userItems,setUserItems}) => {
     if(createItem === "Not authorized" || createItem === "ERROR OCCURED WHILE CREATING ITEM" || createItem === "ITEM ALREADY EXISTS"|| createItem === "INVALID TYPE ARGUMENT"){
       console.log(createItem)
     }else{
-      console.log("ITEM CREATED SUCCESSFULLY")
       setUserItems([
         ...userItems,
         createItem
       ])
+      dispatch(sendAlert("itemCreated"))
+      setTimeout(() => {
+        dispatch(sendAlert("off"))
+      }, 1000);
+      setNormalInput({
+        name: "",
+    amount:"",
+    costPrice: "",
+    sellPrice: "",
+    seller: "",
+      })
     }
   }else{
     console.log("CANNOT LEAVE EMPTY FIELD")
@@ -146,8 +158,8 @@ const FunctionForm = ({userItems,setUserItems}) => {
   <Form >
       <FormInput onChange={handleNormalInput} name='name' placeholder='name' value={normalInput.name}/>
       <FormInput onChange={handleNormalInput} type="tel" name='amount' placeholder='amount' value={normalInput.amount}/>
-      <FormInput onChange={handleNormalInput} name='costPrice' placeholder='cost price' value={normalInput.costPrice}/>
-      <FormInput onChange={handleNormalInput} name='sellPrice' placeholder='sell price' value={normalInput.sellPrice}/>
+      <FormInput onChange={handleNormalInput} type="tel" name='costPrice' placeholder='cost price' value={normalInput.costPrice}/>
+      <FormInput onChange={handleNormalInput} type="tel" name='sellPrice' placeholder='sell price' value={normalInput.sellPrice}/>
       <FormInput onChange={handleNormalInput} name='seller' placeholder='seller' value={normalInput.seller}/>
       <AddItemButton onClick={handleAddItem} color='green' name='addItem' >ADD ITEM</AddItemButton>
   </Form>

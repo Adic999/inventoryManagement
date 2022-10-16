@@ -47,7 +47,7 @@ export async function getShopItem(req, res) {
     if (items.length > 0) {
       res.status(200).json(items);
     } else {
-      res.status(400).json("NO ITEMS FOUND");
+      res.status(200).json("NO ITEMS FOUND");
     }
   } catch (error) {
     res.status(400).json("ERROR OCCURED WHILE GETTING DATA");
