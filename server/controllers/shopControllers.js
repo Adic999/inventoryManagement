@@ -43,6 +43,7 @@ export async function postShopItem(req, res) {
 // get item function
 export async function getShopItem(req, res) {
   try {
+    console.log(req.user.id);
     const items = await shopModel.find({ user: req.user.id });
     if (items.length > 0) {
       res.status(200).json(items);

@@ -230,7 +230,7 @@ const CreateItem = () => {
       }
       ))
       if(filteredObject.price && filteredObject.name && filteredObject.category){
-      const createItem = await createMenuItem(token, filteredObject)
+      await createMenuItem(token, filteredObject)
       dispatch(sendAlert("itemCreated"))
       setTimeout(() => {
         dispatch(sendAlert("off"))

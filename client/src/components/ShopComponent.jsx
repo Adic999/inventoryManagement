@@ -92,7 +92,7 @@ const ShopComponent = () => {
   const [sortOption, setSortOption] = useState("")
   const [userItems, setUserItems] = useState([])
 
-  const token = useSelector(state=> state.token)
+  const token = useSelector(state=> state.token.token)
 
   useEffect(()=>{
     filterFunction()
@@ -106,8 +106,8 @@ const ShopComponent = () => {
 
   async function filterFunction(){
     // getting user items from the database 
-    let items = await getShopItems(token.token)
-    
+    let items = await getShopItems(token)
+    console.log("running the api req")
     // if everything goes well
    if(items !== "Not authorized" && items !== "NO ITEMS FOUND"){
       items = items.map(item=>{
@@ -151,6 +151,8 @@ const ShopComponent = () => {
     }
     )
     setFilteredList(filtered)
+  }else{
+    console.log(items)
   }
   }
   

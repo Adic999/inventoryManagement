@@ -19,7 +19,7 @@ const Shop = () => {
             changeToLogOut()
             }
     },[loggedIn, dispatch, token, navigate])
-
+ 
   return (
     <div>
       <ShopComponent/>
