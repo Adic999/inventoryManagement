@@ -4,7 +4,7 @@ import axios from "axios";
 export async function loginUser(email, password) {
   try {
     const response = await axios.post(
-      "https://inventory-management-api-001.onrender.com/api/user/login",
+      "https://inventorymanagement-api.onrender.com/api/user/login",
       {
         email,
         password,
@@ -23,7 +23,7 @@ export async function loginUser(email, password) {
 export async function registerUser(userdata) {
   try {
     const response = await axios.post(
-      "https://inventory-management-api-001.onrender.com/api/user/register",
+      "https://inventorymanagement-api.onrender.com/api/user/register",
       userdata
     );
     if (response.data) {
