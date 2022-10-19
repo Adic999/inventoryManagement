@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { changePageStatus } from '../store/pageSlice'
 import RenderSales from '../components/RenderSales'
 import {getCompletedOrders} from "../functions/dailySaleFunction.js"
+import { isLoading, sendAlert } from '../store/alert'
 const Container = styled.div`
   background-color: palegoldenrod;
   height: 80vh;
@@ -65,8 +66,17 @@ useEffect(()=>{
 },[select, orders])
 
 const getOrders = async ()=>{
-  const response = await getCompletedOrders(token)
-  setOrders(response)
+  dispatch(isLoading(true))
+  try {
+    const response = await getCompletedOrders(token)
+    setOrders(response)
+  } catch (error) {
+    dispatch(sendAlert("generalAlert"))
+  }
+  dispatch(isLoading(false))
+  setTimeout(() => {
+    dispatch(sendAlert("off"))
+  }, 1000);
 }
 
 const filterFunction =()=>{

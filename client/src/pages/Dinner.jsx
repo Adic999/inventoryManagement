@@ -8,6 +8,7 @@ import TakeOrderItemRender from '../components/TakeOrderItemRender'
 import { getMenuItems, getPendingOrders } from '../functions/dailySaleFunction'
 import { setPendingOrder,setMenuItems} from '../store/takeOrder'
 import { check } from '../functions/compareArrays'
+import { isLoading, sendAlert } from '../store/alert'
 const Container = styled.div`
   height: 80vh;
   display: flex;
@@ -111,16 +112,14 @@ const Dinner = () => {
 
               // change page status to dinner to change the title bar to dinner
               dispatch(changePageStatus("dinner"))
-
               renderDinnerPage()
-
-              console.log("y")
               // filter function to filter user query 
               handleFilter()
             }
     },[loggedIn, dispatch, token, navigate,inputVal, menuItems, pendingOrders, dinnerReRender])
 
     const renderDinnerPage = async ()=>{
+      dispatch(isLoading(true))
       try {
         const dinnerItems = await getMenuItems(token)
         const pendingOrdersFuncVar = await getPendingOrders(token)
@@ -130,8 +129,13 @@ const Dinner = () => {
           console.log("rerender")
         }
       } catch (error) {
-        console.log(error)
+        dispatch(sendAlert("generalAlert"))
+        setTimeout(() => {
+          dispatch(sendAlert("off"))
+        }, 1000);
       }
+      dispatch(isLoading(false))
+
     }
 
  

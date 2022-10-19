@@ -3,8 +3,9 @@ import styled from 'styled-components'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ItemRender from './ItemRender';
 import { getShopItems } from '../functions/shopFunction';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import FunctionForm from './functionForm/FunctionForm';
+import { isLoading } from '../store/alert';
 
 const Container = styled.div`
     padding: 20px;
@@ -91,8 +92,8 @@ const ShopComponent = () => {
   const [filteredList, setFilteredList] = useState([])
   const [sortOption, setSortOption] = useState("")
   const [userItems, setUserItems] = useState([])
-
   const token = useSelector(state=> state.token.token)
+  const dispatch = useDispatch()
 
   useEffect(()=>{
     filterFunction()
@@ -105,9 +106,9 @@ const ShopComponent = () => {
 
 
   async function filterFunction(){
+    dispatch(isLoading(true))
     // getting user items from the database 
     let items = await getShopItems(token)
-    console.log("running the api req")
     // if everything goes well
    if(items !== "Not authorized" && items !== "NO ITEMS FOUND"){
       items = items.map(item=>{
@@ -151,8 +152,9 @@ const ShopComponent = () => {
     }
     )
     setFilteredList(filtered)
+    dispatch(isLoading(false))
   }else{
-    console.log(items)
+    dispatch(isLoading(false))
   }
   }
   

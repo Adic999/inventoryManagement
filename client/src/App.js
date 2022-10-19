@@ -16,17 +16,18 @@ import Lunch from "./pages/Lunch";
 import Dinner from "./pages/Dinner";
 import PendingOrders from "./pages/PendingOrders";
 import AlertModal from "./components/modal/AlertModal";
-import { useSelector, useDispatch } from "react-redux";
-import { sendAlert } from "./store/alert";
+import { useSelector } from "react-redux";
+import Loading from "./components/modal/Loading";
 
 const App = () => {
-  const dispatch = useDispatch();
   const alert = useSelector((state) => state.alert.alertMessages);
+  const loading = useSelector((state) => state.alert.loading);
   return (
     <Router>
       <Navbar />
       <PageTitleBar />
       {alert === "off" ? null : <AlertModal />}
+      {loading ? <Loading /> : null}
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />

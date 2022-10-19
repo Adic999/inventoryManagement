@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import styled from 'styled-components'
 import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import { changePageStatus } from '../store/pageSlice'
 import { createMenuItem } from '../functions/dailySaleFunction'
-import {sendAlert} from "../store/alert"
+import {isLoading, sendAlert} from "../store/alert"
 
 const Container = styled.div`
     height: 90vh;
@@ -122,6 +122,7 @@ const CreateItem = () => {
     const itemDetailChoiceCurry = useSelector((state)=>state.itemDetail.choiceCurry)
     const itemDetailChoiceDrink = useSelector((state)=>state.itemDetail.choiceDrink)
     const itemDetailComplementary = useSelector((state)=>state.itemDetail.complementary)
+    const alert = useSelector((state)=>state.alert.alert)
     const dispatch = useDispatch()
     const [nameVal, setNameVal] = useState("")
     const [priceVal, setPriceVal] = useState(0)
@@ -131,6 +132,11 @@ const CreateItem = () => {
     const [complementary, setComplementary] = useState(false)
     const [category, setCategory] = useState("")
     const [createObject, setCreateObject] = useState({})
+    // useref hook
+    const choiceCurryRef = useRef(null)
+    const choiceDrinkRef = useRef(null)
+    const complementaryRef = useRef(null)
+    const categoryRef = useRef(null)
 
     useEffect(()=>{
         if(!loggedIn || !token){
@@ -200,6 +206,7 @@ const CreateItem = () => {
 
     //handle create item
     const handleCreateItem = async (e)=>{
+      dispatch(isLoading(true))
       e.preventDefault()
       const filteredObject = Object.fromEntries(Object.entries(createObject).filter((entry)=>{
         const [key, value] = entry
@@ -230,14 +237,21 @@ const CreateItem = () => {
       }
       ))
       if(filteredObject.price && filteredObject.name && filteredObject.category){
-      await createMenuItem(token, filteredObject)
-      dispatch(sendAlert("itemCreated"))
+      const response = await createMenuItem(token, filteredObject)
+      if(Object.keys(response).length > 0){
+        dispatch(sendAlert("itemCreated"))
+      clearInputFields()
       setTimeout(() => {
         dispatch(sendAlert("off"))
       }, 1000);
-      }else{
-        console.log("please fill required form")
       }
+      }else{
+        dispatch(sendAlert("emptyFields"))
+        setTimeout(() => {
+          dispatch(sendAlert("off"))
+        }, 1000);
+      }
+      dispatch(isLoading(false))
     }
 
     // const handle item name
@@ -249,6 +263,26 @@ const CreateItem = () => {
     const handlePrice = (e)=>{
       const numberPrice = parseInt(e.target.value)
       setPriceVal(numberPrice)
+    }
+
+
+    // clear input fields after item created
+    const clearInputFields = ()=>{
+      // checkbox clear
+      choiceCurryRef.current.checked = false
+      choiceDrinkRef.current.checked = false
+      complementaryRef.current.checked = false
+      if(categoryRef.current.checked = true){
+        categoryRef.current.checked = ""
+      }
+      // functional clear
+      setChoiceCurryVal(false)
+      setChoiceDrinkVal(false)
+      setComplementary(false)
+      setNameVal("")
+      setPriceVal(0)
+      setCurryAmountVal(1)
+      setCategory("")
     }
 
   return (
@@ -264,8 +298,8 @@ const CreateItem = () => {
           <Input type="number" onChange={handlePrice} value={priceVal || ""} id='price'/>
           </InputDiv>
           <InputDiv>
-          <Label htmlFor='choiceCurry'>Choice Curry:</Label>
-          <Input onClick={handleChoice} id='choiceCurry' type="checkbox"/>
+          <Label htmlFor='choiceCurry'>Set Curry:</Label>
+          <Input ref={choiceCurryRef} onClick={handleChoice} id='choiceCurry' type="checkbox"/>
           </InputDiv>
           {choiceCurryVal?<InputDiv>
           <Label htmlFor='curryAmount'>Curry Amount:</Label>
@@ -277,20 +311,20 @@ const CreateItem = () => {
           </InputDiv>:null}
           <InputDiv>
           <Label  htmlFor='choiceDrink' >Choice Drink:</Label>
-          <Input onClick={handleChoice}  id='choiceDrink' type="checkbox"/>
+          <Input ref={choiceDrinkRef} onClick={handleChoice}  id='choiceDrink' type="checkbox"/>
           </InputDiv>
           <InputDiv>
           <Label htmlFor='complementary' >Complementary:</Label>
-          <Input onClick={handleChoice} id='complementary' type="checkbox"/>
+          <Input ref={complementaryRef} onClick={handleChoice} id='complementary' type="checkbox"/>
           </InputDiv>
           <InputDivRadio >
           <RadioInput >
             <RadioLabel htmlFor="lunch">Lunch</RadioLabel>
-            <RadioButton onClick={handleCategory} type="radio" id='lunch' name='category'/>
+            <RadioButton ref={categoryRef} onClick={handleCategory} type="radio" id='lunch' name='category'/>
           </RadioInput>
           <RadioInput>
           <RadioLabel htmlFor="dinner">Dinner</RadioLabel>
-          <RadioButton onClick={handleCategory} type="radio" id='dinner' name='category'/>
+          <RadioButton ref={categoryRef} onClick={handleCategory} type="radio" id='dinner' name='category'/>
           </RadioInput>
           </InputDivRadio>
           <Button onClick={handleCreateItem} >Create Item</Button>

@@ -5,7 +5,8 @@ import {changeToLoggedIn} from "../store/userSlice"
 import {useDispatch} from "react-redux"
 import {useNavigate} from "react-router-dom"
 import { registerToken } from "../store/tokenSlice";
-
+import { isLoading } from '../store/alert'
+import { sendAlert } from '../store/alert'
 const Container = styled.div`
     height: 50vh;
     padding: 20px;
@@ -67,18 +68,25 @@ const LoginComponent = () => {
 
     const handleSubmit = async (e)=>{
         e.preventDefault()
+        dispatch(isLoading(true))
         if(email && password){
+            try {
             const res = await loginUser(email, password)
-            if(res.message === "No user found" || res.message === "incorrect password"){
-                console.log(res.message)
-            }else{
-                dispatch(changeToLoggedIn())
-                dispatch(registerToken(res.token))
-                navigate("/")
-            }
-        }else{
-            console.log("Please fill all the forms")
+            dispatch(changeToLoggedIn())
+            dispatch(sendAlert("welcome"))
+            dispatch(registerToken(res.token))
+            navigate("/")
+            } catch (error) {
+            dispatch(sendAlert("wrongCredentials"))
+            console.log(error.message)
         }
+        }else{
+            dispatch(sendAlert("emptyFields"))
+        }
+        dispatch(isLoading(false))
+        setTimeout(() => {
+            dispatch(sendAlert("off"))
+        }, 1000);
     }
 
   return (

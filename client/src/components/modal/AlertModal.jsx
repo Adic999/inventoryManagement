@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux'
 const Container = styled.div`
     height: 5vh;
     width: 75%;
-    background-color: #A1C298;
+    background-color: ${props=> props.color ? props.color : "#A1C298"};
     position: fixed;
     right: 12.5%;
     bottom: 20%;
@@ -55,6 +55,22 @@ const AlertModal = () => {
     :alert === "orderEdited" ? 
     <Container>
       {alertMessages.orderEdited}
+    </Container>
+    :alert === "wrongCredentials" ? 
+    <Container color={"red"}>
+      {alertMessages.wrongCredentials}
+    </Container>
+    :alert === "emptyFields" ? 
+    <Container color={"red"}>
+      {alertMessages.emptyFields}
+    </Container>
+    :alert === "welcome" ? 
+    <Container>
+      {alertMessages.welcome}
+    </Container>
+    :alert === "generalAlert" ? 
+    <Container color={"red"}>
+      {alertMessages.generalAlert}
     </Container>
     :null
   }

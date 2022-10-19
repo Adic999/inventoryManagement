@@ -5,7 +5,7 @@ import PendingOrderDeleteModal from "./modal/PendingOrderDeleteModal"
 import {updatePendingOrder} from '../functions/dailySaleFunction'
 import {useDispatch, useSelector } from 'react-redux'
 import { setPendingOrderReRender } from '../store/takeOrder'
-import { sendAlert } from '../store/alert'
+import { isLoading, sendAlert } from '../store/alert'
 
 const ItemContainer = styled.div`
   display: grid;
@@ -139,6 +139,7 @@ const RenderPendingOrders = ({name,price,id, setPendingupdated,curry1, curry2, a
   // handle edit button function
   const handleEdit= async ()=>{
     if(edit){
+      dispatch(isLoading(true))
       setEdit(false)
       const data = {
         curry1: curry1Input,
@@ -147,12 +148,17 @@ const RenderPendingOrders = ({name,price,id, setPendingupdated,curry1, curry2, a
         spiceLevel: spiceLevelInput,
         drink: drinkInput
       } 
-      await updatePendingOrder(token, data,id)
-      dispatch(setPendingOrderReRender(pendingOrderReRender ? false:true))
-      dispatch(sendAlert("orderEdited"))
-            setTimeout(() => {
-              dispatch(sendAlert("off"))
-            }, 1000);
+      try {
+        await updatePendingOrder(token, data,id)
+        dispatch(setPendingOrderReRender(pendingOrderReRender ? false:true))
+        dispatch(sendAlert("orderEdited"))
+        setTimeout(() => {
+          dispatch(sendAlert("off"))
+        }, 1000);
+      } catch (error) {
+        dispatch(sendAlert("generalAlert"))
+      }
+      dispatch(isLoading(false))
     }else{
       setEdit(true)
     }

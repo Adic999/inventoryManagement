@@ -4,7 +4,7 @@ import { turnOff } from '../../store/fncButtons'
 import {useDispatch, useSelector} from "react-redux"
 import { resetTempData } from '../../store/tempData'
 import { updateShopItem, soldShopItem } from '../../functions/shopFunction'
-import {sendAlert} from "../../store/alert"
+import {isLoading, sendAlert} from "../../store/alert"
 
 const Container = styled.div`
     
@@ -36,16 +36,22 @@ const FuncBtnComoponent = ({button,list, token, userItems, setUserItems}) => {
     }
 
     const handleClick = async (e)=>{
+      dispatch(isLoading(true))
       e.preventDefault()
       if(button === "sold"){
         if(list.amount === ''){
-          console.log("AMOUNT CANNOT BE EMPTY")
+          dispatch(isLoading(false))
+          dispatch(sendAlert("emptyFields"))
+          setTimeout(() => {
+            dispatch(sendAlert("off"))
+          }, 1000);
         }else{
           const sellItem = await soldShopItem(token,list,id)
           setUserItems([
             ...userItems,
             sellItem
           ])
+          dispatch(isLoading(false))
           dispatch(sendAlert("itemSold"))
           setTimeout(() => {
             dispatch(sendAlert("off"))
@@ -68,11 +74,17 @@ const FuncBtnComoponent = ({button,list, token, userItems, setUserItems}) => {
             ...userItems,
             updateItem
           ])
+          dispatch(isLoading(false))
           dispatch(sendAlert("itemUpdated"))
           setTimeout(() => {
             dispatch(sendAlert("off"))
           }, 1000);
         }else{
+          dispatch(isLoading(false))
+          dispatch(sendAlert("generalAlert"))
+          setTimeout(() => {
+            dispatch(sendAlert("off"))
+          }, 1000);
           console.log("CANNOT UPDATE EMPTY ARGUMENTS")
         }
         dispatch(turnOff(e.target.name))

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {setLunchReRender, setDinnerReRender , turnOffTakeOrder, turnOnTakeOrder} from "../store/takeOrder"
 import { setTargetId } from '../store/takeOrder'
 import { createPendingOrders } from '../functions/dailySaleFunction'
-import { sendAlert } from '../store/alert'
+import { isLoading, sendAlert } from '../store/alert'
 
 const RowContainer = styled.div`
   display: grid;
@@ -206,6 +206,7 @@ const TakeOrderItemRender = ({id,price,itemName,curryAmount,curryOptions,drinkOp
     }
 
     const handleConfirm = async ()=>{
+      dispatch(isLoading(true))
       try {
         if(complementary){
           const data = {
@@ -227,9 +228,6 @@ const TakeOrderItemRender = ({id,price,itemName,curryAmount,curryOptions,drinkOp
             dispatch(setDinnerReRender( dinnerReRender? false: true))
           }
             dispatch(sendAlert("orderAdded"))
-            setTimeout(() => {
-              dispatch(sendAlert("off"))
-            }, 1000);
           }
       }
         else{
@@ -253,15 +251,15 @@ const TakeOrderItemRender = ({id,price,itemName,curryAmount,curryOptions,drinkOp
               dispatch(setDinnerReRender( dinnerReRender? false: true))
             }
             dispatch(sendAlert("orderAdded"))
-            setTimeout(() => {
-              dispatch(sendAlert("off"))
-            }, 1000);
           }
         }
       } catch (error) {
-        console.log(error)
-        
+        dispatch(sendAlert("generalAlert"))
       }
+      dispatch(isLoading(false))
+      setTimeout(() => {
+        dispatch(sendAlert("off"))
+      }, 1000);
       dispatch(turnOffTakeOrder("takeOrder"))
       dispatch(setTargetId(""))
       setAmountCount(1)

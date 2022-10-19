@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { changePageStatus } from '../store/pageSlice'
 import { getPendingOrders } from '../functions/dailySaleFunction'
 import { setPendingOrder} from '../store/takeOrder'
+import { isLoading, sendAlert } from '../store/alert'
 
 
 const Container = styled.div`
@@ -51,8 +52,17 @@ const PendingOrders = () => {
 },[loggedIn, dispatch, token, navigate,pendingOrderReRender])
  
 const renderPendingOrdersFunction = async ()=>{
-  const response = await getPendingOrders(token)
-  dispatch(setPendingOrder(response))
+  dispatch(isLoading(true))
+  try {
+    const response = await getPendingOrders(token)
+    dispatch(setPendingOrder(response))
+  } catch (error) {
+    dispatch(sendAlert("generalAlert"))
+    setTimeout(() => {
+      dispatch(sendAlert("off"))
+    }, timeout);
+  }
+  dispatch(isLoading(false))
 }
  
   return (

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import {useDispatch, useSelector } from 'react-redux'
 import { deletePendingOrder } from '../../functions/dailySaleFunction'
 import { setPendingOrderReRender } from '../../store/takeOrder'
-import {sendAlert} from "../../store/alert"
+import {isLoading, sendAlert} from "../../store/alert"
 
 const Container = styled.div`
     background-color: hsla(0, 0%, 98.0392156862745%, 1);
@@ -55,14 +55,22 @@ const PendingOrderDeleteModal = ({setDeleteOpen,id }) => {
   const token = useSelector(state=>state.token.token)
   const pendingOrderReRender = useSelector(state=>state.takeOrder.pendingOrderReRender)
   const dispatch = useDispatch()
+
+
   const handleDelete = async ()=>{
-    await deletePendingOrder(token, id)
-    dispatch(setPendingOrderReRender(pendingOrderReRender ? false:true))
-    setDeleteOpen(false)
-    dispatch(sendAlert("orderDeleted"))
-            setTimeout(() => {
-              dispatch(sendAlert("off"))
-            }, 1000);
+    dispatch(isLoading(true))
+    try {
+      await deletePendingOrder(token, id)
+      dispatch(setPendingOrderReRender(pendingOrderReRender ? false:true))
+      dispatch(sendAlert("orderDeleted"))
+  } catch (error) {
+    dispatch(sendAlert("generalAlert"))
+  }
+  dispatch(isLoading(false))
+  setDeleteOpen(false)
+  setTimeout(() => {
+    dispatch(sendAlert("off"))
+  }, 1000);
   }
   
   const handleCancel = ()=>{

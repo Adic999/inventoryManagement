@@ -8,6 +8,7 @@ import TakeOrderItemRender from '../components/TakeOrderItemRender'
 import { getMenuItems, getPendingOrders } from '../functions/dailySaleFunction'
 import { check } from '../functions/compareArrays'
 import { setPendingOrder,setMenuItems} from '../store/takeOrder'
+import { isLoading } from '../store/alert'
 
 const Container = styled.div`
   height: 80vh;
@@ -122,6 +123,7 @@ const Lunch = () => {
 
 
     const renderLunchPage = async ()=>{
+      dispatch(isLoading(true))
       try {
         const lunchItems = await getMenuItems(token)
         const pendingOrdersFuncVar = await getPendingOrders(token)
@@ -132,6 +134,7 @@ const Lunch = () => {
       } catch (error) {
         console.log(error)
       }
+      dispatch(isLoading(false))
     }
 
  

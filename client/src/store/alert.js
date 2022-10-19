@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   alert: "off",
+  loading: false,
   alertMessages: {
     itemSold: "ITEM SOLD",
     itemDeleted: "ITEM DELETED",
@@ -11,6 +12,10 @@ const initialState = {
     orderCompleted: "ORDER COMPLETED",
     orderDeleted: "ORDER DELETED",
     orderEdited: "ORDER EDITED",
+    wrongCredentials: "WRONG CREDENTIALS",
+    emptyFields: "EMPTY FIELDS",
+    welcome: "WELCOME",
+    generalAlert: "UNKNOWN ERROR OCCURED",
   },
 };
 
@@ -21,9 +26,12 @@ const alertMessagesSlice = createSlice({
     sendAlert(state, actions) {
       state.alert = actions.payload;
     },
+    isLoading(state, actions) {
+      state.loading = actions.payload;
+    },
   },
 });
 
-export const { sendAlert } = alertMessagesSlice.actions;
+export const { sendAlert, isLoading } = alertMessagesSlice.actions;
 
 export default alertMessagesSlice.reducer;

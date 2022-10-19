@@ -4,7 +4,7 @@ import { turnOff } from '../../store/fncButtons'
 import { useDispatch, useSelector } from 'react-redux'
 import { resetTempData } from '../../store/tempData'
 import {deleteShopItem} from "../../functions/shopFunction"
-import {sendAlert} from "../../store/alert"
+import {isLoading, sendAlert} from "../../store/alert"
 
 const Container = styled.div`
     height: 100%;
@@ -53,18 +53,21 @@ const DeleteModal = ({userItems,setUserItems}) => {
     const token = useSelector(state=> state.token.token)
 
     const handleDelete = async ()=>{
+      dispatch(isLoading(true))
       const deleted = await deleteShopItem(token, id)
       if(deleted !== "NO ITEM FOUND"){
         setUserItems([
           ...userItems,
           "deleted"
         ])
+        dispatch(isLoading(false))
         dispatch(sendAlert("itemDeleted"))
         setTimeout(() => {
           dispatch(sendAlert("off"))
         }, 1000);
       dispatch(turnOff("delete"))
     }else{
+      dispatch(isLoading(false))
       dispatch(turnOff("delete"))
     }
     }

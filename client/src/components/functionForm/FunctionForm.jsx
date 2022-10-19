@@ -5,7 +5,7 @@ import DeleteModal from "../modal/DeleteModal"
 import FuncBtnComoponent from '../functionButtons/FuncBtnComoponent';
 import { createShopItem } from '../../functions/shopFunction';
 import { useEffect } from 'react';
-import {sendAlert} from "../../store/alert.js"
+import {isLoading, sendAlert} from "../../store/alert.js"
 
 const Form = styled.form`
   border: 1px solid black;
@@ -81,19 +81,25 @@ const FunctionForm = ({userItems,setUserItems}) => {
       sellPrice:numberSellPrice
     }
     Object.values(data).forEach(value=>{
-      if(!value){
+      if(value.length === 0){
         emptyField = true
       }
     })
     if(!emptyField){
+      dispatch(isLoading(true))
     const createItem = await createShopItem(token,data)
     if(createItem === "Not authorized" || createItem === "ERROR OCCURED WHILE CREATING ITEM" || createItem === "ITEM ALREADY EXISTS"|| createItem === "INVALID TYPE ARGUMENT"){
-      console.log(createItem)
+      dispatch(sendAlert("generalAlert"))
+      setTimeout(() => {
+        dispatch(sendAlert("off"))
+      }, 1000);
+      dispatch(isLoading(false))
     }else{
       setUserItems([
         ...userItems,
         createItem
       ])
+      dispatch(isLoading(false))
       dispatch(sendAlert("itemCreated"))
       setTimeout(() => {
         dispatch(sendAlert("off"))
@@ -107,7 +113,11 @@ const FunctionForm = ({userItems,setUserItems}) => {
       })
     }
   }else{
-    console.log("CANNOT LEAVE EMPTY FIELD")
+    dispatch(isLoading(false))
+    dispatch(sendAlert("emptyFields"))
+    setTimeout(() => {
+      dispatch(sendAlert("off"))
+    }, 1000);
   }
   }
   // CREATE AN ITEM END
