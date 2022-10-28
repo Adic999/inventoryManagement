@@ -72,6 +72,14 @@ const AlertModal = () => {
     <Container color={"red"}>
       {alertMessages.generalAlert}
     </Container>
+    :alert === "differentPasswords" ? 
+    <Container color={"red"}>
+      {alertMessages.differentPasswords}
+    </Container>
+    :alert === "alreadyExists" ? 
+    <Container color={"red"}>
+      {alertMessages.alreadyExists}
+    </Container>
     :null
   }
   </>

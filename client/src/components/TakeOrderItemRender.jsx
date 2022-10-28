@@ -163,7 +163,7 @@ const TakeOrderItemRender = ({id,price,itemName,curryAmount,curryOptions,drinkOp
         setAmountCount(amountCount+1)
       }
     }
-
+ 
     // curry spice level counter
     const spiceCounter = (e)=>{
       if(e.target.id==="minus"){

@@ -7,6 +7,7 @@ import {useNavigate} from "react-router-dom"
 import { registerToken } from "../store/tokenSlice";
 import { isLoading } from '../store/alert'
 import { sendAlert } from '../store/alert'
+
 const Container = styled.div`
     height: 50vh;
     padding: 20px;
@@ -100,7 +101,6 @@ const LoginComponent = () => {
             <Input type="password" name="password" placeholder='password' onChange={handleInput} value={password || ''}/>
             <Button type='submit'>Login</Button>
             </Form>
-            <Link>Forgot password ?</Link>
         </Wrapper>
     </Container>
   )

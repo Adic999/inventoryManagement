@@ -15,6 +15,8 @@ const initialState = {
     wrongCredentials: "WRONG CREDENTIALS",
     emptyFields: "EMPTY FIELDS",
     welcome: "WELCOME",
+    differentPasswords: "Passwords do not match",
+    alreadyExists: "user already exists",
     generalAlert: "UNKNOWN ERROR OCCURED",
   },
 };

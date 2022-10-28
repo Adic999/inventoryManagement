@@ -2,6 +2,8 @@ import React,{useState} from 'react'
 import styled from "styled-components"
 import { registerUser } from '../functions/userfunctions'
 import {useNavigate} from "react-router-dom"
+import { useDispatch } from 'react-redux'
+import { sendAlert,isLoading} from '../store/alert'
 
 const Container = styled.div`
     height: 50vh;
@@ -35,10 +37,7 @@ const Button = styled.button`
     cursor: pointer;
     margin-top: 10px;
 `
-const Link = styled.a`
-    color: #000000;
-    cursor: pointer;
-`
+
 const Form = styled.form`
     padding: 20px;
     display: flex;
@@ -53,7 +52,7 @@ const RegisterComponent = () => {
 
     const [inputVal, setInputVal] = useState({})
     const navigate = useNavigate()
-    
+    const dispatch = useDispatch()
     const handleInput = (e)=>{
        setInputVal((prevState)=>({
         ...prevState,
@@ -64,20 +63,28 @@ const RegisterComponent = () => {
 
     const handleSubmit = async (e)=>{
         e.preventDefault()
+        dispatch(isLoading(true))
         if(name && email && password && password2){
             if(password === password2){
                 delete inputVal.password2
             const res = await registerUser(inputVal)
-            if(res.message === "user already exists" || res.message === "error occured while creating the user"){
+            if(res.message === "user already exitst" || res.message === "error occured while creating the user"){
                 console.log(res.message)
+                dispatch(sendAlert("alreadyExists"))
             }else{
                 navigate("/login")
             }}else{
+                dispatch(sendAlert("differentPasswords"))
                 console.log("password do not match")
             }
         }else{
+            dispatch(sendAlert("emptyFields"))
             console.log("Please fill all the forms")
         }
+        dispatch(isLoading(false))
+        setTimeout(() => {
+            dispatch(sendAlert("off"))
+        }, 1000);
     }
 
   return (
@@ -93,7 +100,6 @@ const RegisterComponent = () => {
             <Input type="password" onChange={handleInput} name="password2" value={password2 || ''} placeholder='confirm password'/>
             <Button>Register</Button>
             </Form>
-            <Link>already have an account ?/ login</Link>
         </Wrapper>
     </Container>
   )

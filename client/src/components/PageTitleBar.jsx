@@ -30,7 +30,7 @@ const Button = styled.button`
 `
 
 const PageTitleBar = () => {
-
+  const loggedIn = useSelector((state)=>state.userState.loggedIn)
   const pageStatus = useSelector((state)=>state.pageState.pageStatus)
   const navigate = useNavigate()
   let pageTitle
@@ -87,7 +87,7 @@ const PageTitleBar = () => {
   return (
     <Container>
       <Wrapper>
-      {pageTitle !== "DASHBOARD"?<Button onClick={handleBackButton}><ArrowBackOutlinedIcon style={{cursor:"pointer"}}/></Button>:null}
+      {pageTitle !== "DASHBOARD"?<Button onClick={handleBackButton}>{loggedIn ?<ArrowBackOutlinedIcon style={{cursor:"pointer"}}/>:null}</Button>:null}
         <Title>
           {pageTitle}
         </Title>

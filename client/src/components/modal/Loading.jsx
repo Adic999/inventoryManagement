@@ -11,16 +11,16 @@ const Container = styled.div`
     top: 0%;
     align-items: flex-end;
     justify-content: center;
-    background-color: rgba(253, 255, 178, 0.8);
+    background: none;
 `
 const Loading = () => {
   return (
     <Container>
       <ReactLoading
-          type={"cylon"}
+          type={"spin"}
           color={"green"}
-          height={"50%"}
-          width={"50%"}
+          height={"25%"}
+          width={"25%"}
         />
     </Container>
   )
