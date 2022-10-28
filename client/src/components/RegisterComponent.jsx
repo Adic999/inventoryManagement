@@ -68,7 +68,7 @@ const RegisterComponent = () => {
             if(password === password2){
                 delete inputVal.password2
             const res = await registerUser(inputVal)
-            if(res.message === "user already exitst" || res.message === "error occured while creating the user"){
+            if(res.message === "user already exists" || res.message === "error occured while creating the user"){
                 console.log(res.message)
                 dispatch(sendAlert("alreadyExists"))
             }else{
